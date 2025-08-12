@@ -1,5 +1,5 @@
 """
-Experiment 3: Monotone Audio Signal Generation
+Experiment 3: Monotone Audio Signal Generation (FIXED VERSION)
 Based on the Speech and Audio Signal Processing course lecture plan
 
 Functionality:
@@ -8,6 +8,8 @@ Functionality:
 3. Saves generated audio to file
 4. Visualizes the generated signal in time and frequency domains
 5. Supports multiple waveform types: sine, square, sawtooth, triangle
+
+FIXED: Corrected tkinter filedialog parameter issue
 """
 
 import numpy as np
@@ -222,13 +224,13 @@ class MonotoneGenerator:
         root = tk.Tk()
         root.withdraw()
         
-        # Default filename
+        # Default filename - FIXED: Use initialfile instead of initialvalue
         default_name = f"monotone_{self.waveform_type}_{int(self.frequency)}Hz_{self.duration}s.wav"
         
         filepath = filedialog.asksaveasfilename(
             title="Save generated audio",
             defaultextension=".wav",
-            initialvalue=default_name,
+            initialfile=default_name,  # FIXED: Changed from initialvalue to initialfile
             filetypes=[
                 ("WAV files", "*.wav"),
                 ("FLAC files", "*.flac"),
@@ -244,6 +246,8 @@ class MonotoneGenerator:
             messagebox.showinfo("Success", f"Audio saved successfully to:\n{os.path.basename(filepath)}")
         else:
             print("Save cancelled by user.")
+        
+        root.destroy()  # Clean up the root window
 
 def main():
     """Main function implementing Experiment 3: Monotone Audio Signal Generation"""
@@ -273,7 +277,11 @@ def main():
     generator.visualize_signal()
     
     # Step 5: Option to save
+    root = tk.Tk()
+    root.withdraw()
     save_choice = messagebox.askyesno("Save Audio", "Do you want to save the generated audio to a file?")
+    root.destroy()
+    
     if save_choice:
         generator.save_audio_file()
     
